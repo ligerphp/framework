@@ -10,8 +10,8 @@
     },
     "authors": [
         {
-            "name": "Alfred",
-            "email": "fred@liger.io"
+            "name": "Alfred Johnson Awah",
+            "email": "ligerframework@gmail.com"
         }
     ],
     "require": {
@@ -37,20 +37,5 @@
             "Core\\": "src/Core/"
         }
     },
-    "autoload-dev": {
-        "files": [
-        ],
-        "psr-4": {
-        }
-    },
-    "extra": {
-        "branch-alias": {
-            "dev-master": "4.0-dev"
-        }
-    },
-    "config": {
-        "sort-packages": true
-    },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "minimum-stability": "dev"
 }
