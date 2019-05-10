@@ -10,7 +10,7 @@
     },
     "authors": [
         {
-            "name": "Alfred",
+            "name": "Alfred Johnson Awah",
             "email": "fred@liger.io"
         }
     ],
@@ -45,7 +45,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-master": "4.0-dev"
+            "dev-master": "4.0.0"
         }
     },
     "config": {
