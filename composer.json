@@ -5,8 +5,8 @@
     "license": "MIT",
     "homepage": "https://liger.io",
     "support": {
-        "issues": "https://github.io/liger/framework/issues",
-        "source": "https://github.io/liger/framework"
+        "issues": "https://github.com/ligerphp/framework/issues",
+        "source": "https://github.com/ligerphp/framework"
     },
     "authors": [
         {
@@ -31,10 +31,23 @@
     },
     "autoload": {
         "files": [
-            "Foundation/helpers.php"
+            "src/Core/Foundation/helpers.php"
         ],
+        
         "psr-4": {
             "Core\\": "src/Core/"
+        }
+    }, "autoload-dev": {
+        "files": [
+            "tests/Database/stubs/MigrationCreatorFakeMigration.php"
+        ],
+        "psr-4": {
+            "Core\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0-dev"
         }
     },
     "minimum-stability": "dev"
