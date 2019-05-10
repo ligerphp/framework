@@ -1,0 +1,34 @@
+{
+    "name": "core/console",
+    "description": "The core Console package.",
+    "license": "MIT",
+    "homepage": "https://liger.io",
+    "support": {
+        "issues": "https://github.com/liger/framework/issues",
+        "source": "https://github.com/liger/framework"
+    },
+    "authors": [
+        {
+            "name": "Alfred Johnson Awah",
+            "email": "fred@liger.io"
+        }
+    ],
+    "require": {
+        "php": "^7.1.3",
+        "symfony/console": "~4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\Console\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "4.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "minimum-stability": "dev"
+}
