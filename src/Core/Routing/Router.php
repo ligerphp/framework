@@ -2,40 +2,11 @@
 namespace Core\Routing;
 
 use App\Models\Users;
-use Core\Foundation\Api\Framework;
 use Core\Http\Request;
 use Core\Session\Session;
-use Symfony\Component\HttpKernel;
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\Routing\RequestContext;
-
+use Core\Container\Container;
 class Router
 {
-
-    public static function route($url, $app)
-    {
-
-
-            $request = Request::createFromGlobals();
-
-            $context = new RequestContext();
-            $context->fromRequest($request);
-
-            $matcher = new UrlMatcher($app->routes, $context);
-
-            $controllerResolver = new HttpKernel\Controller\ControllerResolver();
-            $argumentResolver = new HttpKernel\Controller\ArgumentResolver();
-
-            $framework = new Framework($matcher, $controllerResolver, $argumentResolver);
-            $framework = new HttpKernel\HttpCache\HttpCache(
-                $framework,
-                new HttpKernel\HttpCache\Store(PROOT . 'public' . DS . 'cache')
-            );
-            $response = $framework->handle($request);
-            
-            $response->send();
-
-    }
 
     public static function redirect($location)
     {

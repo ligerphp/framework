@@ -7,7 +7,7 @@ use Symfony\Component\Routing\RouteCollection;
 use Dotenv\Exception\InvalidFileException;
 use Dotenv\Exception\InvalidPathException;
 use Core\Container\Container;
-use Core\Routing\Router;
+use Core\Http\Request;
 
 class Application extends Container{
     
@@ -74,7 +74,6 @@ class Application extends Container{
         if ($basePath) {
           $this->setBasePath($basePath);
       }
-        $this->url = isset($_SERVER['PATH_INFO']) ? explode('/', ltrim($_SERVER['PATH_INFO'], '/')) : [];
         $this->routes = new RouteCollection();
     }
 
@@ -357,7 +356,13 @@ class Application extends Container{
       $this->loadEnvironment();
 
       // Route the request
-      Router::route($this->url,$this);
+      $route = $this->routes;
+      $request = Request::createFromGlobals();
+      $container = new Container($route);
+      $response = $container->getContainer()->get('framework')->handle($request);
+      // $framework = new Framework($route);
+      // $response = $framework->handle($request);
+      $response->send();
     }
 
 

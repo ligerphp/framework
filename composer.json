@@ -35,15 +35,19 @@
         ],
         
         "psr-4": {
-            "Core\\": "src/Core/"
+            "Core\\": "src/Core/",
+            "App\\":"app",
+            "Database\\":"database"
         }
     }, "autoload-dev": {
-        "files": [
-            "tests/Database/stubs/MigrationCreatorFakeMigration.php"
-        ],
         "psr-4": {
             "Core\\Tests\\": "tests/"
         }
+    },
+    "require-dev": {
+        "symfony/dotenv": "^4.2",
+        "phpunit/phpunit": "^8",
+        "symfony/var-dumper": "^4.2"
     },
     "minimum-stability": "dev"
 }

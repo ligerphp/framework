@@ -1,0 +1,14 @@
+app
+database
+js
+css
+bootstrap
+routes
+tests
+vendor
+index.php
+liger
+liger.png
+.htaccess
+.env
+composer.lock
