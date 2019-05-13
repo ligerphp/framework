@@ -12,3 +12,6 @@ liger.png
 .htaccess
 .env
 composer.lock
+basic_container.php
+phpunit.xml
+phpunit.xml.dist
