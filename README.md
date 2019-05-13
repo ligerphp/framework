@@ -1,5 +1,5 @@
 
-<p align="center"><a href="https://liger.firebaseapp.com" target="_blank"><img src="https://liger.com/assets/img/liger.png"></a></p>
+<p align="center"><a href="https://liger.firebaseapp.com" target="_blank"><img src="https://res.cloudinary.com/ogwugo-people/image/upload/v1557723223/liger.png"></a></p>
 
 
 <p align="center">
