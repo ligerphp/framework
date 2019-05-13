@@ -9,7 +9,7 @@ class DB {
 
   private function __construct() {
     try {
-      $this->_pdo = new PDO('mysql:host='.$_ENV['DB_HOST'].';dbname='.$_ENV['DB_NAME'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
+      $this->_pdo = new PDO('mysql:host='.$_ENV['DB_HOST'].';dbname='.$_ENV['DB_DATABASE'], $_ENV['DB_USERNAME'], $_ENV['DB_PASSWORD']);
       $this->_pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       $this->_pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
     } catch(PDOException $e) {

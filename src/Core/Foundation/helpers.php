@@ -1,5 +1,6 @@
 <?php
-use Symfony\Component\Security\Core\Authentication\AuthenticationProviderManager;
+
+use Core\Container\Container;
 
 if (! function_exists('abort')) {
 
@@ -15,11 +16,5 @@ function abort($code,$message,array $headers=[]){
 if(!function_exists('dd')){
     function dd($value){
         return dump($value);
-    }
-}
-
-if(!function_exists('auth')){
-    function auth(){
-        return new AuthenticationProviderManager([]);
     }
 }

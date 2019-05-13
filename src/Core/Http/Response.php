@@ -6,10 +6,10 @@ use Symfony\Component\HttpFoundation\Response as SympResponse;
 class Response extends SympResponse{
 
 
-    public static function json(array $arry){
+    public static function json(array $arry,$code =200){
         if(is_array($arry)){
              $encoded = json_encode($arry);
-            return new parent($encoded,200,['Content-Type'=> 'application/json']);
+            return new parent($encoded,$code,['Content-Type'=> 'application/json']);
         }
     }
     

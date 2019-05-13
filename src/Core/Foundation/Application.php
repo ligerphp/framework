@@ -95,9 +95,9 @@ class Application extends Container{
      */
     public function setBasePath($basePath)
     {
-        $this->basePath;
+        $this->basePath =  $basePath;
 
-        return $this;
+        return $this->basePath;
     }
        
     /**
@@ -326,6 +326,10 @@ class Application extends Container{
     public function put($path,$controller){
       $this->registerRoute($path,$controller,'PUT');
     }
+
+    public function update($path,$controller){
+        $this->registerRoute($path,$controller,'UPDATE');
+      }
     /**
      * Create a delete route
      * @param $path required string
@@ -354,18 +358,25 @@ class Application extends Container{
     public function start(){
 
       $this->loadEnvironment();
+     $response = $this->loadContainer();
+     $response->send();
 
-      // Route the request
-      $route = $this->routes;
-      $request = Request::createFromGlobals();
-      $container = new Container($route);
-      $response = $container->getContainer()->get('framework')->handle($request);
-      // $framework = new Framework($route);
-      // $response = $framework->handle($request);
-      $response->send();
+    }
+
+    public function getInstance(){
+        return new self($this->basePath);
     }
 
 
+    public function loadContainer(){
+        $request = Request::createFromGlobals();
+        $container = new Container($this->route);
+        
+        //get new instance of the framework class and hanlde the request
+        $response = $container->getContainer()->get('framework')->handle($request);
+        return $response;
+      
+    }
     public function loadEnvironment(){
 
 try {
