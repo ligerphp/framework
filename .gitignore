@@ -10,6 +10,8 @@ index.php
 liger
 liger.png
 .htaccess
+config
+public
 .env
 composer.lock
 basic_container.php
