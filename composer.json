@@ -30,15 +30,13 @@
         "symfony/security": "^4.2"
     },
     "autoload": {
+          "psr-4": {
+            "Core\\": "src/Core/"
+        },
         "files": [
             "src/Core/Foundation/helpers.php"
-        ],
+        ]
         
-        "psr-4": {
-            "Core\\": "src/Core/",
-            "App\\":"app",
-            "Database\\":"database"
-        }
     }, "autoload-dev": {
         "psr-4": {
             "Core\\Tests\\": "tests/"
