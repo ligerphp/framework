@@ -2,9 +2,9 @@
 namespace Core\Console;
 
 use Symfony\Component\Console\Application;
-use Core\Src\MigrationCommand;
-use Core\Src\Migrate;
-use Core\Src\ControllerCommand\Controller;
+use Core\Console\MigrationCommand;
+use Core\Console\Migrate;
+use Core\Console\ControllerCommand\Controller;
 
 class Console extends Application {
         public function __construct()
