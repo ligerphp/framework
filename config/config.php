@@ -5,7 +5,6 @@
   // this should be set to false for security reasons. If you need to run migrations from the browser you can set this to true, then run migrations, then set it back to false.
   define('RUN_MIGRATIONS_FROM_BROWSER', false);
 
-  define('DEFAULT_CONTROLLER', 'Home'); // default controller if there isn't one defined in the url
   define('DEFAULT_LAYOUT', 'default'); // if no layout is set in the controller use this layout.
 
   define('PROOT', '/'); // set this to '/' for a live server.

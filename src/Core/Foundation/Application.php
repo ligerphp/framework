@@ -18,7 +18,7 @@ class Application extends Container{
      *
      * @var string
      */
-    const VERSION = '4.0.0';
+    const VERSION = '1.0.0';
 
         /**
      * The base path for the liger installation.
@@ -356,7 +356,6 @@ class Application extends Container{
 
 
     public function start(){
-
       $this->loadEnvironment();
      $response = $this->loadContainer();
      $response->send();
@@ -370,7 +369,7 @@ class Application extends Container{
 
     public function loadContainer(){
         $request = Request::createFromGlobals();
-        $container = new Container($this->route);
+        $container = new Container($this->routes);
         
         //get new instance of the framework class and hanlde the request
         $response = $container->getContainer()->get('framework')->handle($request);
@@ -382,7 +381,7 @@ class Application extends Container{
 try {
 
 $dotenv = new Dotenv();
-$dotenv->load($this->basePath('').'.env');
+$dotenv->load($this->basePath('/').'.env');
 
 } catch (InvalidPathException $e) {
     die('The environment path could not be found: '.$e->getMessage());
