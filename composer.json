@@ -3,7 +3,7 @@
     "description": "The liger Framework.",
     "keywords": ["framework", "liger","php","api"],
     "license": "MIT",
-    "homepage": "https://liger.io",
+    "homepage": "https://liger.com",
     "support": {
         "issues": "https://github.com/ligerphp/framework/issues",
         "source": "https://github.com/ligerphp/framework"
@@ -27,8 +27,10 @@
         "symfony/filesystem": "^4.2",
         "twig/twig": "^2.0",
         "swiftmailer/swiftmailer": "^6.0",
-        "symfony/security": "^4.2"
-    },
+        "symfony/var-dumper": "^4.2",
+        "symfony/security": "^4.2",
+        "symfony/dotenv": "^4.2"
+        },
     "autoload": {
         "files": [
             "src/Core/Foundation/helpers.php"
@@ -44,9 +46,7 @@
         }
     },
     "require-dev": {
-        "symfony/dotenv": "^4.2",
-        "phpunit/phpunit": "^8",
-        "symfony/var-dumper": "^4.2"
+        "phpunit/phpunit": "^8"
     },
     "minimum-stability": "dev"
 }
