@@ -32,13 +32,12 @@
     "autoload": {
         "files": [
             "src/Core/Foundation/helpers.php"
-        ],
-        
+        ], 
         "psr-4": {
-            "Core\\": "src/Core/",
-            "App\\":"app",
-            "Database\\":"database"
+            "Core\\": "src/Core/"
         }
+        
+        
     }, "autoload-dev": {
         "psr-4": {
             "Core\\Tests\\": "tests/"
