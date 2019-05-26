@@ -9,7 +9,7 @@ use Dotenv\Exception\InvalidPathException;
 use Core\Container\Container;
 use Core\Http\Request;
 
-class Application extends Container{
+class Application extends Container {
     
    public $registerPath = [];
 
@@ -68,8 +68,9 @@ class Application extends Container{
      */
     protected $loadedProviders = [];
 
+    public static $instance;
 
-    private function __construct($basePath='')
+    public function __construct($basePath='')
     {
         if ($basePath) {
           $this->setBasePath($basePath);
@@ -172,15 +173,6 @@ class Application extends Container{
         return $this;
     }
 
-    /**
-     * Get the path to the language files.
-     *
-     * @return string
-     */
-    public function langPath()
-    {
-        return $this->resourcePath().DIRECTORY_SEPARATOR.'lang';
-    }
 
     /**
      * Get the path to the public / web directory.
@@ -301,16 +293,8 @@ class Application extends Container{
 
         return $this['env'];
     }
-
-    private function __clone(){
-
-    }
-
-    private function __wakeup() {
-		// Stopping unserialize of object
-    }
     
-    private function getInstance(){
+    public static function getInstance(){
         // Check if instance is already exists 		
 		if(self::$instance == null) {
 			self::$instance = new Application(ROOT);
@@ -374,16 +358,14 @@ class Application extends Container{
     public function start(){
 
     parent::__construct($this->routes);
-    $this->getInstance()->loadEnvironment();
-    //   $this->loadEnvironment();
-  $response =  $this->getInstance()->loadContainer();
-    //  $response = $this->loadContainer();
+    $this->loadEnvironment();
+    $response =  $this->loadContainer();
     $response->send();
 
     }
 
 
-    private function loadContainer(){
+    public function loadContainer(){
 
         $this->instantiate('app',$this);
         $this->instantiate('session',\Core\Session\Session::class);

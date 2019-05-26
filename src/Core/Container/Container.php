@@ -76,7 +76,7 @@ class Container {
      * Bind service to the container
      */
     public function instantiate($alias,$abstract){
-    return  $this->containerBuilder->register($alias,$abstract);
+    return  $this->getContainer()->register($alias,$abstract);
     }
     
 }
