@@ -18,6 +18,7 @@ namespace Core\View;
         include(ROOT . DS . 'app' . DS . 'views' . DS . 'layouts' . DS . $this->_layout . '.php');
 
       } else {
+        // dd(ROOT .DS. 'app' . DS . 'views' . DS . $viewString . '.php');
         die('The view \"' . $viewName . '\" does not exist.');
       }
     }

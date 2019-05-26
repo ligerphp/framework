@@ -29,7 +29,10 @@
         "swiftmailer/swiftmailer": "^6.0",
         "symfony/var-dumper": "^4.2",
         "symfony/security": "^4.2",
-        "symfony/dotenv": "^4.2"
+        "symfony/dotenv": "^4.2",
+        "tymon/jwt-auth": "dev-master",
+        "league/flysystem": "^1.1@dev",
+        "respect/validation": "^2.0@dev"
         },
     "autoload": {
         "files": [

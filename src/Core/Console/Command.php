@@ -5,7 +5,7 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Core\DB;
+use Core\Database\DB;
 use Core\Console\ControllerCommand\Makers\Controller;
 
 class Command extends SymfonyCommand
