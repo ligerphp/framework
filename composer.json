@@ -40,7 +40,7 @@
         ], 
         "psr-4": {
             "Core\\": "src/Core/",
-            "app\\":"app/"
+            "App\\":"app/"
         }
         
         

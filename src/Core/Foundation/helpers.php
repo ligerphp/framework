@@ -45,7 +45,7 @@ if(!function_exists('response')){
     }
 }
 
-if (! function_exists('env')) {
+if (! function_exists('env_')) {
     /**
      * Gets the value of an environment variable.
      *
@@ -53,7 +53,7 @@ if (! function_exists('env')) {
      * @param  mixed   $default
      * @return mixed
      */
-    function env($key, $default = null)
+    function env_($key, $default = null)
     {
         $value = getenv($key);
 

@@ -35,8 +35,8 @@ class Session {
 
   public function __construct($driver = '')
   {
-      if(file_exists(ROOT . DS . 'config' . DS . 'session.php')){
-       $this->sessionConfig =  include ROOT .DS . 'config' . DS . 'session.php';
+      if(file_exists(ROOT . DS . 'config' . DS . 'sessions.php')){
+       $this->sessionConfig =  include ROOT .DS . 'config' . DS . 'sessions.php';
       };
       
     $this->driver = $driver != '' ? $driver : $this->sessionConfig['driver'];

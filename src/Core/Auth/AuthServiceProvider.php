@@ -23,7 +23,7 @@ class AuthServiceProvider {
 
     public function attempt(){
            $session = new Session();
-        if($session->exists('email') && $session::exists('loggedin')){
+        if($session->exists('email') && $session->exists('loggedin')){
             $session->addMsg('success','Welcome back');
             dd($session);
          return true;
@@ -37,20 +37,22 @@ class AuthServiceProvider {
                 $session->set('email',$email);
                 $session->set('loggedin',true);
                 $session->set('userToken',$user);
-                $session->addMsg('success','Authentication Successful');
+                $session->addMsg('warning','Authentication Successful');
                 return true;
             }
+            $session->set('loggedin',false);
+            $session->addMsg('failed','Incorrect Username or password');
             return false;  
     
         }
     }
         
     public function user(){
-
+        $session =  new Session('web');
         if (! is_null($this->user)) {
             return $this->user;
         }
-        if(Session::exists('userToken')){
+        if($session->exists('userToken')){
             //user exists
         }
     }
