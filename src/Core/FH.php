@@ -166,7 +166,8 @@ class FH {
    */
   public static function generateToken(){
     $token = base64_encode(openssl_random_pseudo_bytes(32));
-    Session::set('csrf_token',$token);
+   $session =  new Session('web');
+    $session->set('csrf_token',$token);
     return $token;
   }
 

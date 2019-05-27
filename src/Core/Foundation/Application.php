@@ -9,7 +9,7 @@ use Dotenv\Exception\InvalidPathException;
 use Core\Container\Container;
 use Core\Http\Request;
 
-class Application extends Container{
+class Application extends Container {
     
    public $registerPath = [];
 
@@ -68,13 +68,16 @@ class Application extends Container{
      */
     protected $loadedProviders = [];
 
+    public static $instance;
 
     public function __construct($basePath='')
     {
         if ($basePath) {
           $this->setBasePath($basePath);
       }
+
         $this->routes = new RouteCollection();
+        $this->routes->setMethods(['POST','GET','DELETE','PATCH','UPDATE','HEAD','OPTIONS']);
         $this->_set_reporting();
     }
 
@@ -170,15 +173,6 @@ class Application extends Container{
         return $this;
     }
 
-    /**
-     * Get the path to the language files.
-     *
-     * @return string
-     */
-    public function langPath()
-    {
-        return $this->resourcePath().DIRECTORY_SEPARATOR.'lang';
-    }
 
     /**
      * Get the path to the public / web directory.
@@ -199,6 +193,8 @@ class Application extends Container{
     {
         return $this->storagePath ?: $this->basePath.DIRECTORY_SEPARATOR.'storage';
     }
+
+     
 
     /**
      * Set the storage directory.
@@ -297,7 +293,15 @@ class Application extends Container{
 
         return $this['env'];
     }
-
+    
+    public static function getInstance(){
+        // Check if instance is already exists 		
+		if(self::$instance == null) {
+			self::$instance = new Application(ROOT);
+		}
+		
+		return self::$instance;
+    }
     /**
      * Determine if application is in local environment.
      *
@@ -307,21 +311,8 @@ class Application extends Container{
     {
         return $this['env'] == 'local';
     }
-
-
-    public function registerRoute($path,$controller,$method){
-      $route = new Route($path, ['_controller' => $controller],['methods' => $method]);
-      $this->routes->add(uniqid(), $route);
-      array_push($this->registerPath,[['route' => $path,'controller' => $controller]]);
-    }
-
-
-    public function post($path,$controller){
-      $this->registerRoute($path,$controller,'POST');
-    }
-
     private function _set_reporting() {
-        if(DEBUG) {
+        if(DEBUG && php_sapi_name() != 'cli') {
           error_reporting(E_ALL);
           ini_set('display_errors', 1);
         } else {
@@ -331,6 +322,17 @@ class Application extends Container{
           ini_set('error_log', ROOT . DS .'tmp' . DS . 'logs' . DS . 'errors.log');
         }
       }
+
+    public function registerRoute($path,$controller,$method){
+      $route = new Route($path, ['_controller' => $controller],['_methods' => $method],array(),'',array(),array('POST','GET'));
+      $this->routes->add(uniqid().time(), $route);
+    }
+
+
+    public function post($path,$controller){
+      $this->registerRoute($path,$controller,'POST');
+    }
+
     public function get($path,$controller){
       $this->registerRoute($path,$controller,'GET');
     }
@@ -351,43 +353,33 @@ class Application extends Container{
     public function delete($path,$controller){
       $this->registerRoute($path,$controller,'DELETE');
     }
-
-    public function group($version){
-      echo $version;
-    }
-
-    public function prefix($version,$callback){
-      // return $this;
-     return $callback($this);
-    }
     
-    
-    public function getRoute(){
-      return $this->registerPath;
-    }
-
 
     public function start(){
-      $this->loadEnvironment();
-     $response = $this->loadContainer();
-     $response->send();
+
+    parent::__construct($this->routes);
+    $this->loadEnvironment();
+    $response =  $this->loadContainer();
+    $response->send();
 
     }
 
-    public function getInstance(){
-        return new self($this->basePath);
-    }
 
+    public function loadContainer(){
 
-    private function loadContainer(){
-        $request = Request::createFromGlobals();
-        $container = new Container($this->routes);
+        $this->instantiate('app',$this);
+        $this->instantiate('session',\Core\Session\Session::class);
         
-        //get new instance of the framework class and hanlde the request
-        $response = $container->getContainer()->get('framework')->handle($request);
+        $request = $this->getContainer()->get('request')->createFromGlobals();
+        $response = $this->getContainer()->get('framework')->handle($request);
+        
         return $response;
-      
     }
+
+    /**
+     * 
+     * Let's load the environment variables from .env files
+     */
     public function loadEnvironment(){
 
 try {

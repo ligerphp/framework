@@ -14,6 +14,7 @@ use Core\Foundation\Listeners\ContentListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Core\Foundation\Listeners\StringResponseListener;
+use Core\Http\Request;
 class Framework extends HttpKernel implements HttpKernelInterface{
     
     protected $matcher, $controllerResolver, $argumentResolver, $dispatcher;
@@ -22,19 +23,11 @@ class Framework extends HttpKernel implements HttpKernelInterface{
     public function __construct($route)
     {
 
-            $requestStack = new RequestStack();
-            $context = new RequestContext();
-            $matcher = new UrlMatcher($route, $context);
-
-            
-            $controllerResolver = new ControllerResolver();
-            $argumentResolver = new ArgumentResolver();
-             $dispatcher = new EventDispatcher();
-         
-             $dispatcher->addSubscriber(new ContentListener());
-            $dispatcher->addSubscriber(new RouterListener($matcher,$requestStack));
-            $dispatcher->addSubscriber(new ExceptionListener('App\Exceptions\ErrorController::exception'));
-            $dispatcher->addSubscriber(new ResponseListener('UTF-8'));
+            $requestStack = app('request_stack');
+            $controllerResolver = app('controller_resolver');
+            $argumentResolver = app('argument_resolver');
+            $dispatcher = app('dispatcher');
+            $dispatcher->addSubscriber(new ContentListener());
             $dispatcher->addSubscriber(new StringResponseListener());
             
         parent::__construct($dispatcher,$controllerResolver,$requestStack,$argumentResolver);

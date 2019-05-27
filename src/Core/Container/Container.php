@@ -9,16 +9,24 @@ use Symfony\Component\EventDispatcher;
 use Symfony\Component\HttpFoundation;
 use Symfony\Component\HttpKernel;
 use Symfony\Component\Routing;
+use Core\Http\Request;
+use Core\Auth\AuthServiceProvider;
+use Core\Http\Response;
 
 class Container {
+    public static $_routes =  null;
+    private static $_instance = null;
+    private $containerBuilder;
 
     public function __construct($routes)
     {
-        
+        self::$_routes = $routes;
+
      $this->containerBuilder =  new ContainerBuilder();
-     $this->containerBuilder->register('context',Routing\RequestContext::class);
+     $this->containerBuilder->register('context',Routing\RequestContext::class)
+                            ->addMethodCall('fromRequest',[Request::createFromGlobals()]);    
      $this->containerBuilder->register('matcher',Routing\Matcher\UrlMatcher::class)
-                        ->setArguments([$routes,new Reference('context')]);
+                        ->setArguments([self::$_routes,new Reference('context')]);
 
     $this->containerBuilder->register('request_stack',HttpFoundation\RequestStack::class);
     $this->containerBuilder->register('controller_resolver',HttpKernel\Controller\ControllerResolver::class);
@@ -27,9 +35,16 @@ class Container {
     $this->containerBuilder->register('listener.router',HttpKernel\EventListener\RouterListener::class)
                     ->setArguments([new Reference('matcher'),new Reference('request_stack')]);
 
+    $this->containerBuilder->register('request',Request::class);
+    $this->containerBuilder->register('response',Response::class);
+
+    $this->containerBuilder->register('auth',AuthServiceProvider::class)
+                           ->setArguments([new Reference('request')]);
+
     $this->containerBuilder->register('listener.response',HttpKernel\EventListener\ResponseListener::class)
                     ->setArguments(['UTF-8']);
-
+        
+    $this->containerBuilder->register('session',\Core\Session\Session::class);
     $this->containerBuilder->register('listener.exception',HttpKernel\EventListener\ExceptionListener::class)
                     ->setArguments(['App\Exceptions\ErrorController::exception']);
     
@@ -39,13 +54,29 @@ class Container {
         ->addMethodCall('addSubscriber',[new Reference('listener.exception')]);
 
     $this->containerBuilder->register('framework',Framework::class)
-        ->setArguments([$routes
+        ->setArguments([self::$_routes
         ]);
 
     }
 
     public function getContainer(){
         return $this->containerBuilder;
+    }
+
+    public static function getInstance(){
+
+        if(!isset(self::$_instance)) {
+            self::$_instance = new self(self::$_routes);
+          }
+          return self::$_instance;
+    }
+
+    /**
+     * 
+     * Bind service to the container
+     */
+    public function instantiate($alias,$abstract){
+    return  $this->getContainer()->register($alias,$abstract);
     }
     
 }
