@@ -27,7 +27,7 @@ class Container {
                             ->addMethodCall('fromRequest',[Request::createFromGlobals()]);    
      $this->containerBuilder->register('matcher',Routing\Matcher\UrlMatcher::class)
                         ->setArguments([self::$_routes,new Reference('context')]);
-
+    
     $this->containerBuilder->register('request_stack',HttpFoundation\RequestStack::class);
     $this->containerBuilder->register('controller_resolver',HttpKernel\Controller\ControllerResolver::class);
     $this->containerBuilder->register('argument_resolver',HttpKernel\Controller\ArgumentResolver::class);
@@ -76,7 +76,7 @@ class Container {
      * Bind service to the container
      */
     public function instantiate($alias,$abstract){
-    return  $this->getContainer()->register($alias,$abstract);
+        self::getInstance()->getContainer()->register($alias,$abstract);
     }
     
 }

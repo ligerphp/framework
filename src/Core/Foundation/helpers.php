@@ -119,3 +119,22 @@ if (! function_exists('session')) {
         return app('session');
     }
 }
+
+if(!function_exists('auth')){
+    /**
+     * Auth service provider
+     * 
+     */
+    function auth(){
+        return app('auth');
+    }
+}
+
+if(!function_exists('form')){
+    /**
+     * Form helpers
+     */
+    function form(){
+        return app('form');
+    }
+}

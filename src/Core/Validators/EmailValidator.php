@@ -12,4 +12,5 @@ class EmailValidator extends CustomValidator {
     }
     return $pass;
   }
+  
 }

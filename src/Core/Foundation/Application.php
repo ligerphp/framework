@@ -357,10 +357,11 @@ class Application extends Container {
 
     public function start(){
 
-    parent::__construct($this->routes);
-    $this->loadEnvironment();
-    $response =  $this->loadContainer();
-    $response->send();
+     parent::__construct($this->routes);
+    
+     $this->loadEnvironment();
+     $response =  $this->loadContainer();
+     $response->send();
 
     }
 
@@ -369,6 +370,7 @@ class Application extends Container {
 
         $this->instantiate('app',$this);
         $this->instantiate('session',\Core\Session\Session::class);
+        $this->instantiate('form',\Core\Foundation\FormHelpers::class);
         
         $request = $this->getContainer()->get('request')->createFromGlobals();
         $response = $this->getContainer()->get('framework')->handle($request);

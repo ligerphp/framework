@@ -21,7 +21,8 @@ class Framework extends HttpKernel implements HttpKernelInterface{
             $dispatcher = app('dispatcher');
             $dispatcher->addSubscriber(new ContentListener());
             $dispatcher->addSubscriber(new StringResponseListener());
-       
+            
+
         try {
         parent::__construct($dispatcher,$controllerResolver,$requestStack,$argumentResolver);
             

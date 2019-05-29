@@ -71,7 +71,6 @@ namespace Core\View;
         die('You must first run the start method.');
       }
     }
-
     /**
      * Getter for the site title
      * @method siteTitle

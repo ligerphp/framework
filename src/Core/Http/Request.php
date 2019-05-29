@@ -486,7 +486,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
      * @param  \Core\Contracts\Session\Session  $session
      * @return void
      */
-    public function setLaravelSession($session)
+    public function setLigerSession($session)
     {
         $this->session = $session;
     }
