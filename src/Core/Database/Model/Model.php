@@ -6,6 +6,7 @@ use Core\Database\DB;
  * Parent class for App Models
  */
 class Model {
+  
   protected $_modelName, $_validates=true,$_validationErrors=[];
   public $id;
   protected static $_db, $_table, $_softDelete=false;

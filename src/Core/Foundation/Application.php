@@ -66,10 +66,11 @@ class Application extends Container {
      *
      * @var array
      */
+
     protected $loadedProviders = [];
 
     public static $instance;
-
+    public $webRoutes,$apiRoutes;
     public function __construct($basePath='')
     {
         if ($basePath) {
@@ -78,7 +79,8 @@ class Application extends Container {
 
         $this->routes = new RouteCollection();
         $this->routes->setMethods(['POST','GET','DELETE','PATCH','UPDATE','HEAD','OPTIONS']);
-        $this->_set_reporting();
+        $this->loadRouteFiles();
+      require  $this->configPath('config.php');
     }
 
     /**
@@ -91,6 +93,7 @@ class Application extends Container {
         return static::VERSION;
     }
 
+    
     /**
      * Set the base path for the application.
      *
@@ -258,6 +261,31 @@ class Application extends Container {
         return $this;
     }
 
+    /**
+     * set the route files to be loaded during bootstrapping
+     * 
+     * 
+     */
+    public function loadRouteFiles(){
+      $this->webRoutes =  $this->basePath('routes/web.php');
+      $this->apiRoutes =  $this->basePath('routes/api.php');
+        
+    }
+
+    /**
+     * Get Routes
+     */
+    public function routes(){
+
+        if(file_exists($this->webRoutes) && file_exists($this->apiRoutes)){
+            $app = $this;
+            include $this->webRoutes;
+            include $this->apiRoutes;
+
+        }else{
+            dd($this->webRoutes);
+        }
+    }
     /**
      * Get the environment file the application is using.
      *
