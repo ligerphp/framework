@@ -1,9 +1,11 @@
 <?php
 namespace Core\View;
 
+
   class View {
     protected $_siteTitle = SITE_TITLE,  $_layout = DEFAULT_LAYOUT;
     protected $_content=[], $_currentBuffer;
+    
 
     /**
      * used to render the layout and view
@@ -11,6 +13,14 @@ namespace Core\View;
      * @param  string $viewName path to view
      */
     public function render($viewName) {
+      
+// $loader = new Twig\Loader\FilesystemLoader(ROOT . '/app/views');
+// $twig = new Twig\Environment($loader, [
+//     'cache' => '/bootstrap/cache/compilation_cache',
+// ]);
+// $template = $twig->load($viewName);
+// echo $template->render(['the' => 'variables', 'go' => 'here']); 
+
       $viewAry = explode('/', $viewName);
       $viewString = implode(DS, $viewAry);
       if(file_exists(ROOT . DS . 'app' . DS . 'views' . DS . $viewString . '.php')) {

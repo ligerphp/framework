@@ -7,7 +7,7 @@ use Core\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 // use Core\Http\Response;
 
-class ResponseEvent extends Event{
+class ResponseEvent extends Event {
 
     private $request,$response;
 
@@ -15,6 +15,7 @@ class ResponseEvent extends Event{
     {
         $this->response = $response;
         $this->request = $request;
+        $this->checkcsrf();
     }
     public function getResponse(){
         return $this->response;
@@ -23,5 +24,9 @@ class ResponseEvent extends Event{
     
     public function getRequest(){
         return $this->request;
+    }
+
+    public function checkcsrf(){
+        
     }
 }

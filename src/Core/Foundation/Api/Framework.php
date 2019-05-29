@@ -1,20 +1,12 @@
 <?php
 namespace Core\Foundation\Api;
 
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
-use Symfony\Component\Routing\RequestContext;
 use Core\Foundation\Listeners\ContentListener;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\EventDispatcher\EventDispatcher;
 use Core\Foundation\Listeners\StringResponseListener;
-use Core\Http\Request;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
+use Core\Http\Response;
 class Framework extends HttpKernel implements HttpKernelInterface{
     
     protected $matcher, $controllerResolver, $argumentResolver, $dispatcher;
@@ -29,8 +21,16 @@ class Framework extends HttpKernel implements HttpKernelInterface{
             $dispatcher = app('dispatcher');
             $dispatcher->addSubscriber(new ContentListener());
             $dispatcher->addSubscriber(new StringResponseListener());
-            
+       
+        try {
         parent::__construct($dispatcher,$controllerResolver,$requestStack,$argumentResolver);
+            
+        } catch (ResourceNotFoundException $e) {
+            echo $e->getMessage();
+        } catch (\Exception $exception) {
+            $response = new Response('An error occurred', 500);
+            return $response;
+        }
 
     
     }

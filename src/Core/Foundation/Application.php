@@ -324,7 +324,7 @@ class Application extends Container {
       }
 
     public function registerRoute($path,$controller,$method){
-      $route = new Route($path, ['_controller' => $controller],['_methods' => $method],array(),'',array(),array('POST','GET'));
+      $route = new Route($path, ['_controller' => $controller],array(),array(),'',array(),[$method,'HEAD']);
       $this->routes->add(uniqid().time(), $route);
     }
 

@@ -21,13 +21,18 @@ class AuthServiceProvider {
         $this->request = $request->createFromGlobals();
     }
 
+    /**
+     * Attempt to authenticate a user
+     * @return boolean
+     */
     public function attempt(){
            $session = new Session();
         if($session->exists('email') && $session->exists('loggedin')){
             $session->addMsg('success','Welcome back');
-            dd($session);
-         return true;
+             return true;
+             
         }else{
+
             $email =  $this->request->get('email');
             $_password =  $this->request->get('password');
             $model = new Model();
@@ -37,24 +42,26 @@ class AuthServiceProvider {
                 $session->set('email',$email);
                 $session->set('loggedin',true);
                 $session->set('userToken',$user);
-                $session->addMsg('warning','Authentication Successful');
+                $session->addMsg('success','Authentication Successful');
                 return true;
-            }
-            $session->set('loggedin',false);
-            $session->addMsg('failed','Incorrect Username or password');
+            }else{ 
+            $session->addMsg('warning','Incorrect Username or password');
             return false;  
+            }
+
     
         }
     }
         
-    public function user(){
+    /**
+     * Check if user session exists
+     */
+    public function session(){
         $session =  new Session('web');
-        if (! is_null($this->user)) {
-            return $this->user;
-        }
         if($session->exists('userToken')){
-            //user exists
+            return true;
         }
+        return false;
     }
 
     public function login(){
