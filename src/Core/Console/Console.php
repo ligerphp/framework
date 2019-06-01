@@ -7,11 +7,13 @@ use Core\Console\Migrate;
 use Core\Console\ControllerCommand\Controller;
 
 class Console extends Application {
+    
         public function __construct()
         {
             parent::__construct();
             $this->registerCommands();
         }
+        
         public function registerCommands(){
             $this->add(new MigrationCommand());
             $this->add(new Migrate());

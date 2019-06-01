@@ -12,11 +12,12 @@ class Migrate extends Command
     
     public function configure()
     {
-        $this -> setName('migrate')
-            -> setDescription('Command used to create a new migration file.')
-            -> setHelp('This command allows you to generate new migration files..')
-            -> addArgument('flag', InputArgument::OPTIONAL, 'migration flags');
+        $this->setName('migrate')
+            ->setDescription('Command used to create a new migration file.')
+            ->setHelp('This command allows you to generate new migration files..')
+            ->addArgument('flag', InputArgument::OPTIONAL, 'migration flags');
     }
+
     public function execute(InputInterface $input, OutputInterface $output)
     {
         $this ->migrate($input, $output);
