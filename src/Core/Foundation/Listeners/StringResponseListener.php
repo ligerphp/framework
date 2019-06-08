@@ -9,9 +9,15 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class StringResponseListener implements EventSubscriberInterface{
 
     public function onView(GetResponseForControllerResultEvent $event){
+
         $response = $event->getControllerResult();
-        
-        if(is_string($response) || is_array($response)){
+        if(is_string($response)){
+            $event->setResponse(new Response($response));
+        }else if(is_array($response)){
+            $event->setResponse(new Response(json_encode($response)));
+        }else if(is_bool($response)){
+            $event->setResponse(new Response($response));
+        }else{
             $event->setResponse(new Response($response));
         }
     }

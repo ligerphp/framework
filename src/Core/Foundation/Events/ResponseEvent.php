@@ -15,7 +15,6 @@ class ResponseEvent extends Event {
     {
         $this->response = $response;
         $this->request = $request;
-        $this->checkcsrf();
     }
     public function getResponse(){
         return $this->response;
@@ -26,7 +25,5 @@ class ResponseEvent extends Event {
         return $this->request;
     }
 
-    public function checkcsrf(){
-        
-    }
+    
 }

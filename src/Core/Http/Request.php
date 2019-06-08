@@ -310,7 +310,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     }
 
     /**
-     * This method belongs to Symfony HttpFoundation and is not usually needed when using Laravel.
+     * This method belongs to Symfony HttpFoundation and is not usually needed when using liger.
      *
      * Instead, you may use the "input" method.
      *
@@ -358,7 +358,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
     }
 
     /**
-     * Create a new request instance from the given Laravel request.
+     * Create a new request instance from the given liger request.
      *
      * @param  \Core\Http\Request  $from
      * @param  \Core\Http\Request|null  $to
@@ -385,7 +385,7 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         $request->setJson($from->json());
 
         if ($session = $from->getSession()) {
-            $request->setLaravelSession($session);
+            $request->setligerSession($session);
         }
 
         $request->setUserResolver($from->getUserResolver());

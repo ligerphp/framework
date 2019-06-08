@@ -11,14 +11,16 @@ class ContentListener implements EventSubscriberInterface{
 
         $response = $event->getResponse();
         $headers = $response->headers;
-                if(!$headers->has('Content-Lenght') && !$headers->has('Transfer-Encoding')){
-                    $headers->set('Content-Lenght',strlen($response->getContent()));
+                if(!$headers->has('Content-Length') && !$headers->has('Transfer-Encoding')){
+                    $headers->set('Content-Length',strlen($response->getContent()));
                 }
-
+                if($headers->has('Content-Type')){
+                    $headers->set('Content-Type','Application/json');
+                }
     }
 
     public static function getSubscribedEvents()
     {
-        return ['response'=>['onResponse',-255]];
+        return ['response'=>['onResponse']];
     }
 }

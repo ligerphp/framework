@@ -9,20 +9,21 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ApplicationMaker extends Command {
 
 /**
- * Start the applications server
+ * Start the applications server on port 6060 or user defined
  * 
  */
     public function kickoff(InputInterface $input, OutputInterface $output){
 
         $directory = getcwd();
    
-      $port =   $input->getArgument('port') ? $input->getArgument('port') : 6060;
+        $port =   $input->getArgument('port') ? $input->getArgument('port') : 6060;
         //perform processes
         $process = new Process('php -S localhost:"'.$port.'" -t=public', $directory, null, null, null);
         
         if ('\\' !== DIRECTORY_SEPARATOR && file_exists('/dev/tty') && is_readable('/dev/tty')) {
             $process->setTty(true);
         }
+
         $output->writeln('<comment>Your Liger Application is running on localhost:6060</comment>');
 
         $process->run(function ($type, $line) use ($output) {
@@ -31,4 +32,5 @@ class ApplicationMaker extends Command {
 
 
     }
+
 }

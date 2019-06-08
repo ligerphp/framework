@@ -1,7 +1,7 @@
 <?php
 namespace Core\Auth;
 
-use Core\Database\Model\Model;
+use Core\Database\Ligerbase\Model\Model;
 use Core\Http\Request;
 use Core\Session\Session;
 
@@ -152,7 +152,7 @@ class AuthServiceProvider
         // dd($this->session->exists('user_token'));
         if ($this->session->exists('user_token')) {
 
-            $this->session->addMsg('success', 'Welcome back');
+            $this->session->addMsg('success', 'Already Logged in,Welcome back '.$_SESSION['fname']);
             return true;
 
         } else {
@@ -162,6 +162,7 @@ class AuthServiceProvider
             $user = $this->model->query("SELECT * FROM users WHERE email = ? ", [$email])->first();
             if ($user->password && password_verify($_password, $user->password)) {
                 $this->session->set('user_token', $user->id);
+                $this->session->set('fname', $user->fname);
                 $this->session->addMsg('success', 'Authentication Successful');
                 return true;
             } else {

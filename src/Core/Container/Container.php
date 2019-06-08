@@ -12,6 +12,9 @@ use Symfony\Component\Routing;
 use Core\Http\Request;
 use Core\Auth\AuthServiceProvider;
 use Core\Http\Response;
+use Core\Foundation\Listeners\ResponseListener;
+use Core\Foundation\Listeners\ContentListener;
+use Core\Foundation\Listeners\StringResponseListener;
 
 class Container {
     public static $_routes =  null;
@@ -44,14 +47,20 @@ class Container {
     $this->containerBuilder->register('listener.response',HttpKernel\EventListener\ResponseListener::class)
                     ->setArguments(['UTF-8']);
         
+    $this->containerBuilder->register('listener.cors_response',ResponseListener::class);
+
     $this->containerBuilder->register('session',\Core\Session\Session::class);
+    
     $this->containerBuilder->register('listener.exception',HttpKernel\EventListener\ExceptionListener::class)
                     ->setArguments(['App\Exceptions\ErrorController::exception']);
     
     $this->containerBuilder->register('dispatcher',EventDispatcher\EventDispatcher::class)
         ->addMethodCall('addSubscriber',[new Reference('listener.router')])
         ->addMethodCall('addSubscriber',[new Reference('listener.response')])
-        ->addMethodCall('addSubscriber',[new Reference('listener.exception')]);
+        ->addMethodCall('addSubscriber',[new Reference('listener.exception')])
+        ->addMethodCall('addSubscriber',[new Reference('listener.cors_response')])
+        ->addMethodCall('addSubscriber',[new ContentListener()])
+        ->addMethodCall('addSubscriber',[new StringResponseListener()]);
 
     $this->containerBuilder->register('framework',Framework::class)
         ->setArguments([self::$_routes
