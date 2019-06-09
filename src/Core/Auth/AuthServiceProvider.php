@@ -169,10 +169,10 @@ class AuthServiceProvider
 
                 $this->session->addMsg('warning', 'Incorrect Username or password');
                 return false;
-
             }
 
         }
+        
     }
 
     /**
