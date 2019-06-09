@@ -429,6 +429,15 @@ class Request extends SymfonyRequest implements Arrayable, ArrayAccess
         return parent::duplicate($query, $request, $attributes, $cookies, $this->filterFiles($files), $server);
     }
 
+
+    public function validate(){
+
+        foreach($_REQUEST as $key => $value){
+            sanitize($value);
+            $_REQUEST[$key] = $value;
+        }
+    }
+
     /**
      * Filter the given array of files, removing any empty values.
      *

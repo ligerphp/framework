@@ -138,3 +138,20 @@ if(!function_exists('form')){
         return app('form');
     }
 }
+
+if(!function_exists('sanitize')){
+
+    /**
+     * Santize a given input
+     * 
+     * @param $data required mixed
+     * 
+     * @return mixed
+     */
+    function sanitize($data){
+        htmlentities($data);
+        trim($data);
+        htmlspecialchars($data);
+        return $data;
+    }
+}

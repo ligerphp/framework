@@ -5,25 +5,47 @@ use Core\Http\Request;
 use Core\JWT\Factory;
 use Core\Database\Ligerbase\Model\Model;
 use Core\JWT\Exceptions\AuthCredentialsNotSetException;
+use Core\Validators\EmailValidator;
 
 class JWTAuth extends Factory{
 
     /**
-     *  Authenticate and send back token from reques
-     * @param  \Core\Http\Request $request
+     * New Instance of JWTAuth 
+     * @param \Core\Http\Request required
+     * @return void
      */
-    public function fromRequest(Request $request){
+    public function __construct(Request $request)
+    {
+     $this->request = $request;   
+     $this->model =  new Model();
 
-        
+    }
+    /**
+     * Alias to fromRequest
+     * 
+     * @return string
+     * 
+     */
+    public function login(){
+       return $this->authDB();
+    }
+    /**
+     *  Authenticate and send back token from request
+     * 
+     * @param  \Core\Http\Request $request
+     * 
+     */
+    public function fromRequest(){
        return $this->authDB();
     }
 
     /**
-     * Perfomr database query to find user and generate token;
+     * Perfrom database query to find user and generate token;
      */
     public function authDB(){
+
         $user = $this->model->query("SELECT * FROM users WHERE email = ? ", [$this->email])->first();
-        if ($user->password && password_verify($this->password, $user->password)) {
+        if (isset($user->password) && password_verify($this->password, $user->password)) {
             
            return $this->makeWithCustomClaims(['id' => $user->id,'email' => $user->email,'fname' => $user->fname]);
         } else {
@@ -34,13 +56,20 @@ class JWTAuth extends Factory{
 
 
     public function auth(){
+        $this->email = $this->request->get('email');
+        $this->password = $this->request->get('password');
 
-        $this->email = $_REQUEST['email'];
-        $this->password = $_REQUEST['password'];
-        $this->model =  new Model();
+        $this->email =  sanitize($this->email);
+        $this->password = sanitize($this->password);
 
-        if(!isset($this->email) || !isset($this->password)){
+        $isValidEmail =  new EmailValidator($this->email);
+
+        if(!isset($this->email) || !isset($this->password) || empty($this->email) || empty($this->password)){
          throw new AuthCredentialsNotSetException('Email and  password is required for authentication');
+        }
+
+        if(!$isValidEmail){
+            return $isValidEmail->throw('Email format is not supported');
         }
 
         return $this;
