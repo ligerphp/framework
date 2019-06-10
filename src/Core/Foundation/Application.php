@@ -384,15 +384,24 @@ class Application extends Container {
     
 
     public function start(){
-
+        if(php_sapi_name() == 'cli'){
+            $this->loadEnvironment();
+            $this->loadContainerForConsole();
+        }else{
+            
      parent::__construct($this->routes);
-    
-     $this->loadEnvironment();
+     $this->loadEnvironment();   
      $response =  $this->loadContainer();
      $response->send();
 
+        }
     }
-
+public function loadContainerForConsole(){
+         $this->instantiate('app',$this);
+        $this->instantiate('session',\Core\Session\Session::class);
+        $this->instantiate('form',\Core\Foundation\FormHelpers::class);
+        
+}
 
     public function loadContainer(){
 

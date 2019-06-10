@@ -5,7 +5,7 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Core\Database\DB;
+use Core\Database\Ligerbase\DB;
 use Core\Console\ControllerCommand\Makers\Controller;
 
 class Command extends SymfonyCommand
@@ -62,12 +62,14 @@ class Command extends SymfonyCommand
   foreach($migrations as $fileName){
     $klass = str_replace('database' . DS . 'migrations' . DS ,'',$fileName);
     $klass = str_replace('.php','',$klass);
-    
+    $class = (explode('_',$klass));
+    $classname = ucfirst($class[4]);
+
     if(!in_array($klass,$previousMigs)){
-      $migrationClass = 'Database\Migrations\\'.$klass;
+      $migrationClass = 'Database\Migrations\\'.$classname;
       $mig = new $migrationClass($this->isCli);
       $mig->up();
-      $db->insert('migrations',['migration'=>$klass]);
+      $db->insert('migrations',['migration'=>$classname]);
       $migrationsRun[] = $migrationClass;
       $this->errors = $mig->errors;
 
@@ -106,19 +108,21 @@ class Command extends SymfonyCommand
         $content =
             '<?php
 namespace Database\Migrations;
-use Core\Migration;
+
+use Core\Migrations\Migration;
 
 
-class ' . $filename . ' extends Migration {
+class ' . ucfirst($filename) . ' extends Migration {
          
-public function up() {
+public function up() 
+{
+/////////////////
+}
 
-          }
-
-public function down(){
-        //code to destroy migration
-        
-    }
+public function down()
+{
+//code to destroy migration
+}
         }
         ';
         $resp = file_put_contents($_fileName, $content . PHP_EOL, FILE_APPEND | LOCK_EX);
