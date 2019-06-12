@@ -1,38 +1,28 @@
 <?php
 namespace Core\Foundation\Api;
 
-use Symfony\Component\Routing\Matcher\UrlMatcher;
-use Symfony\Component\HttpKernel\Controller\ControllerResolver;
-use Symfony\Component\HttpKernel\Controller\ArgumentResolver;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\HttpKernel;
-use Symfony\Component\HttpKernel\EventListener\RouterListener;
-use Symfony\Component\HttpKernel\EventListener\ResponseListener;
-use Symfony\Component\HttpKernel\EventListener\ExceptionListener;
-use Symfony\Component\Routing\RequestContext;
-use Core\Foundation\Listeners\ContentListener;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Core\Foundation\Listeners\StringResponseListener;
-use Core\Http\Request;
+use Core\Foundation\Listeners\ResponseListener;
+use Core\Foundation\Events\ResponseEvent;
+
 class Framework extends HttpKernel implements HttpKernelInterface{
     
-    protected $matcher, $controllerResolver, $argumentResolver, $dispatcher;
+    protected $requestStack, $controllerResolver, $argumentResolver, $dispatcher;
 
 
     public function __construct($route)
-    {
+    {      $req =  app('request')->createFromGlobals();
+            $res = app('response');
+            $this->requestStack = app('request_stack');
+            $this->controllerResolver = app('controller_resolver');
+            $this->argumentResolver = app('argument_resolver');
+            $this->dispatcher = app('dispatcher');    
+            $this->dispatcher->addSubscriber(new ResponseListener());
+            $this->dispatcher->dispatch('corsResponse',new ResponseEvent($res,$req));
 
-            $requestStack = app('request_stack');
-            $controllerResolver = app('controller_resolver');
-            $argumentResolver = app('argument_resolver');
-            $dispatcher = app('dispatcher');
-            $dispatcher->addSubscriber(new ContentListener());
-            $dispatcher->addSubscriber(new StringResponseListener());
-            
-        parent::__construct($dispatcher,$controllerResolver,$requestStack,$argumentResolver);
-
-    
+            parent::__construct($this->dispatcher,$this->controllerResolver,$this->requestStack,$this->argumentResolver);
+        
     }
 
 

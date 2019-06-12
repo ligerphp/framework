@@ -119,3 +119,39 @@ if (! function_exists('session')) {
         return app('session');
     }
 }
+
+if(!function_exists('auth')){
+    /**
+     * Auth service provider
+     * 
+     */
+    function auth(){
+        return app('auth');
+    }
+}
+
+if(!function_exists('form')){
+    /**
+     * Form helpers
+     */
+    function form(){
+        return app('form');
+    }
+}
+
+if(!function_exists('sanitize')){
+
+    /**
+     * Santize a given input
+     * 
+     * @param $data required mixed
+     * 
+     * @return mixed
+     */
+    function sanitize($data){
+        htmlentities($data);
+        trim($data);
+        htmlspecialchars($data);
+        return $data;
+    }
+}

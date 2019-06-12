@@ -1,8 +1,8 @@
 <?php
-namespace Core;
+namespace Core\Foundation;
 use Core\Session\Session;
 
-class FH {
+class FormHelpers {
 
   /**
    * Creates an input block to be used in a form
@@ -206,7 +206,7 @@ class FH {
    * @param  array         $errors pass in the form errors ['field'=>'message']
    * @return string                return html string with styled form errors.
    */
-  public static function displayErrors($errors) {
+  public static function displayErrors($errors = []) {
     $hasErrors = (!empty($errors))? ' has-errors' : '';
     $html = '<div class="form-errors"><ul class="bg-light'.$hasErrors.'">';
     foreach($errors as $field => $error) {

@@ -7,7 +7,7 @@ use Core\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 // use Core\Http\Response;
 
-class ResponseEvent extends Event{
+class ResponseEvent extends Event {
 
     private $request,$response;
 
@@ -24,4 +24,6 @@ class ResponseEvent extends Event{
     public function getRequest(){
         return $this->request;
     }
+
+    
 }

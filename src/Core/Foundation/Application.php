@@ -66,10 +66,11 @@ class Application extends Container {
      *
      * @var array
      */
+
     protected $loadedProviders = [];
 
     public static $instance;
-
+    public $webRoutes,$apiRoutes;
     public function __construct($basePath='')
     {
         if ($basePath) {
@@ -78,7 +79,8 @@ class Application extends Container {
 
         $this->routes = new RouteCollection();
         $this->routes->setMethods(['POST','GET','DELETE','PATCH','UPDATE','HEAD','OPTIONS']);
-        $this->_set_reporting();
+        $this->loadRouteFiles();
+      require  $this->configPath('config.php');
     }
 
     /**
@@ -91,6 +93,7 @@ class Application extends Container {
         return static::VERSION;
     }
 
+    
     /**
      * Set the base path for the application.
      *
@@ -259,6 +262,31 @@ class Application extends Container {
     }
 
     /**
+     * set the route files to be loaded during bootstrapping
+     * 
+     * 
+     */
+    public function loadRouteFiles(){
+      $this->webRoutes =  $this->basePath('routes/web.php');
+      $this->apiRoutes =  $this->basePath('routes/api.php');
+        
+    }
+
+    /**
+     * Get Routes
+     */
+    public function routes(){
+
+        if(file_exists($this->webRoutes) && file_exists($this->apiRoutes)){
+            $app = $this;
+            include $this->webRoutes;
+            include $this->apiRoutes;
+
+        }else{
+            dd($this->webRoutes);
+        }
+    }
+    /**
      * Get the environment file the application is using.
      *
      * @return string
@@ -324,7 +352,7 @@ class Application extends Container {
       }
 
     public function registerRoute($path,$controller,$method){
-      $route = new Route($path, ['_controller' => $controller],['_methods' => $method],array(),'',array(),array('POST','GET'));
+      $route = new Route($path, ['_controller' => $controller],array(),array(),'',array(),[$method,'HEAD']);
       $this->routes->add(uniqid().time(), $route);
     }
 
@@ -356,19 +384,30 @@ class Application extends Container {
     
 
     public function start(){
+        if(php_sapi_name() == 'cli'){
+            $this->loadEnvironment();
+            $this->loadContainerForConsole();
+        }else{
+            
+     parent::__construct($this->routes);
+     $this->loadEnvironment();   
+     $response =  $this->loadContainer();
+     $response->send();
 
-    parent::__construct($this->routes);
-    $this->loadEnvironment();
-    $response =  $this->loadContainer();
-    $response->send();
-
+        }
     }
-
+public function loadContainerForConsole(){
+         $this->instantiate('app',$this);
+        $this->instantiate('session',\Core\Session\Session::class);
+        $this->instantiate('form',\Core\Foundation\FormHelpers::class);
+        
+}
 
     public function loadContainer(){
 
         $this->instantiate('app',$this);
         $this->instantiate('session',\Core\Session\Session::class);
+        $this->instantiate('form',\Core\Foundation\FormHelpers::class);
         
         $request = $this->getContainer()->get('request')->createFromGlobals();
         $response = $this->getContainer()->get('framework')->handle($request);

@@ -32,9 +32,13 @@
         "symfony/dotenv": "^4.2",
         "tymon/jwt-auth": "dev-master",
         "league/flysystem": "^1.1@dev",
-        "respect/validation": "^2.0@dev"
+        "respect/validation": "^2.0@dev",
+        "symfony/process": "4.4.x-dev"
         },
     "autoload": {
+        "classmap": [
+            "database"
+        ],
         "files": [
             "src/Core/Foundation/helpers.php"
         ], 
