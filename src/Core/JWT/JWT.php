@@ -2,10 +2,28 @@
 namespace Core\JWT;
 
 use Core\JWT\Factory;
+use Core\JWT\Http\Parser\Parser;
+use Core\JWT\Exceptions\JWTException;
+use Core\JWT\JWTManager;
 
-class JWT {
+class JWT extends Factory{
+
+    private $parsers = [
+      'headers' => Core\JWT\Http\Parser\Headers::class
+    ];
 
 
+    /**
+     * @param \Core\JWT\Http\Parser\Parser
+     * 
+     * @return void
+     */
+    public function __construct(Parser $parser)
+    {
+      $this->parser = $parser;
+      $this->manager =   new JWTManager();
+
+    }
     /**
      * JWT Factory
      * 
@@ -13,12 +31,6 @@ class JWT {
      */
     public $factory;
 
-
-    public function __construct()
-    {
-        $this->factory =  new Factory();
-        
-    }
 
     /**
      * Create new Token
@@ -37,11 +49,42 @@ class JWT {
       
     }
 
+
+    
+    /**
+     * Parse the token from the request.
+     *
+     * @throws \Core\JWT\Exceptions\JWTException
+     *
+     * @return $this
+     */
+    public function parseToken()
+    {
+
+        if (! $token = $this->parser->parseToken()) {
+            throw new JWTException('The token could not be parsed from the request');
+        }
+
+        return $this->setToken($token);
+    }
+
+    /**
+     * Get the raw Payload instance.
+     *
+     * @return \Tymon\JWTAuth\Payload
+     */
+    public function getPayload()
+    {
+        $this->requireToken();
+
+        return $this->manager->decode($this->token);
+    }
+
     /**
      * Verify Token
      * 
      */
-    public function verify($token){
+    public function verifyToken($token){
 
       $this->isValid($token);
     }
@@ -67,18 +110,6 @@ class JWT {
     public function getClaim($claim)
     {
         return $this->payload()->get($claim);
-    }
-
-    /**
-     * Get the raw Payload instance.
-     *
-     * @return \Tymon\JWTAuth\Payload
-     */
-    public function getPayload()
-    {
-        $this->requireToken();
-
-        return $this->manager->decode($this->token);
     }
 
     /**

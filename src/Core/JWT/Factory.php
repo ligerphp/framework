@@ -2,16 +2,17 @@
 namespace Core\JWT;
 
 use Core\JWT\Payloads;
+use Core\JWT\Claims;
+
 
 class Factory {
-       
 
-   public  $claims = [
-        'iss', //issuer
-        'exp', //expires
-        'aud', //audience
-        'nbf', // not before
-        'iat', //issues at
+   public  $defaultClaims = [
+        'iss' => Claims\Issuer::class, //issuer
+        'exp' => Claims\Expires::class, //expires
+        'aud' => Claims\Audience::class, //audience
+        'nbf' => Claims\NotBefore::class, 
+        'iat' => Claims\IssuedAt::class, //issues at
     ];
 
     /**
@@ -26,7 +27,7 @@ class Factory {
      * jwt token secret
      * 
      */
-    private $secret;
+    private $secret ;
 
 
     private $usingCustomClaims = false;
@@ -49,10 +50,12 @@ class Factory {
 
     public function make(){
         
+        
         $this->makeHeaders();
 
         $this->setDefaultClaims();
 
+        $this->secret = $_ENV['JWT_SECRET'];
         
         $signature = $this->signToken($_ENV['JWT_ALG'],$this->encodeToken($this->header,$this->payload,$this->secret));
        
@@ -60,6 +63,46 @@ class Factory {
 
     }
 
+
+    public function makePayloadToArray($token){
+        
+        
+        $flatToken = explode('.',$token);
+        $payload = $flatToken[1];
+        $claims = \base64_decode($payload);
+
+        //check if token has expired
+        if($this->hasValidClaims($token)){
+            return array('claims' => json_decode($claims,true));
+        }
+
+
+    }
+
+    /**
+     * Check if a token is valid 
+     * Loops through all default claims
+     */
+    public function hasValidClaims($token){
+     
+        $flatToken = explode('.',$token);
+        $payload = $flatToken[1];
+        $decodedPayload = base64_decode($payload);
+
+        $claimsArray = $this->filterClaimsFromDecoded($decodedPayload);
+        // dd($claimsArray);
+
+        //validate claims
+        foreach ($claimsArray as $key => $value) {
+            $claimClassFromObj = $this->defaultClaims[$key];
+            $claimClass =  (new $claimClassFromObj($value));
+            if(method_exists($claimClass,'validatePayload')){
+                $claimClass->validatePayload();
+            }
+        }
+        return true;
+
+    }
 
     public function encode($data){
         $encoded =  base64_encode($data);
@@ -160,17 +203,39 @@ class Factory {
 
     }
 
-    /**
-     * Decode a tokens payload
-     */
-    public function decode($token){
 
-        $this->verifySignature($token);
-    }
 
+    
     public function verifySignature($token){
        
-        $flattendArray =  explode('.',$token);
+        $flatToken = explode('.',$token);
+        $payload = $flatToken[1];
+        $headers = $flatToken[0];
+        
+        $old_signature = $flatToken[2];
+        
+        //try to make a clone of token to verify signature
+        
+        $signature = $this->signToken($_ENV['JWT_ALG'],$headers.$payload.$this->secret);
+
+      return $signature === $old_signature;
+        // return true;
+    }
+
+    /**
+     * return an array of required claims eg iss
+     */
+    public function filterClaimsFromDecoded($payload){
+              $dc_pl =    json_decode($payload,TRUE);
+                $res = array();
+
+        foreach ($dc_pl as $key => $val ) {
+            if(array_key_exists($key,$this->defaultClaims)){
+               $res[$key] = $val; 
+            }
+        }
+        
+        return $res;
 
     }
 }

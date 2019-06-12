@@ -2,13 +2,19 @@
 namespace Core\JWT;
 
 use Core\Http\Request;
-use Core\JWT\Factory;
+use Core\JWT\JWT;
 use Core\Database\Ligerbase\Model\Model;
 use Core\JWT\Exceptions\AuthCredentialsNotSetException;
 use Core\Validators\EmailValidator;
+use Core\JWT\Http\Parser\Parser;
+use Core\JWT\Http\Parser\Headers as headerParser;
 
-class JWTAuth extends Factory{
+class JWTAuth extends JWT{
 
+    /**
+     * Message set
+     */
+    public $msg;
     /**
      * New Instance of JWTAuth 
      * @param \Core\Http\Request required
@@ -18,8 +24,64 @@ class JWTAuth extends Factory{
     {
      $this->request = $request;   
      $this->model =  new Model();
-
+     $this->parser =  new Parser($request,[new headerParser]);
+     parent::__construct($this->parser);
+     $this->auth = app('auth');
     }
+
+    /**
+     * Attempt to authenticate the user and return the token.
+     *
+     * @param  array  $credentials
+     *
+     * @return false|string
+     */
+    public function attempt(array $credentials)
+    {
+        if (! $this->auth->byCredentials($credentials)) {
+            return false;
+        }
+
+        return $this->fromUser($this->user());
+    }
+
+    
+    /**
+     * Authenticate a user via a token.
+     *
+     * @return \Tymon\JWTAuth\Contracts\JWTSubject|false
+     */
+    public function authenticate()
+    {
+        $id = $this->getPayload()->get('sub');
+
+        if (! $this->auth->byId($id)) {
+            return false;
+        }
+
+        return $this->user();
+    }
+
+    /**
+     * Alias for authenticate().
+     *
+     * @return \Corre\JWT\Contracts\JWTSubject|false
+     */
+    public function toUser()
+    {
+        return $this->authenticate();
+    }
+
+    /**
+     * Get the authenticated user.
+     *
+     * @return \Core\JWTAuth\Contracts\JWTSubject
+     */
+    public function user()
+    {
+        return $this->auth->user();
+    }
+
     /**
      * Alias to fromRequest
      * 
@@ -45,10 +107,14 @@ class JWTAuth extends Factory{
     public function authDB(){
 
         $user = $this->model->query("SELECT * FROM users WHERE email = ? ", [$this->email])->first();
+        if(!$user){
+            $this->msg = 'No user found with email';
+        }
         if (isset($user->password) && password_verify($this->password, $user->password)) {
             
            return $this->makeWithCustomClaims(['id' => $user->id,'email' => $user->email,'fname' => $user->fname]);
         } else {
+            $this->msg = 'Email and Password do not match';
             return false;
         }
 
