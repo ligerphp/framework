@@ -33,7 +33,7 @@ In order to ensure that the Liger community is welcoming to all, please review a
 
 ## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Johnson Awah Alfred via [fred@liger.com](mailto:fred@liger.com). All security vulnerabilities will be promptly addressed.
+If you discover a security vulnerability within LigerPHP, please send an e-mail to Johnson Awah Alfred via [fred@liger.com](mailto:fred@liger.com). All security vulnerabilities will be promptly addressed.
 
 ## License
 
